@@ -1,7 +1,9 @@
 #include "../include/Particle.hpp"
 
-Particle::Particle() {
-    std::cout << "Particle" << std::endl;
+Particle::Particle(float r, float m, sf::Vector2f pos) {
+    mass = m;
+    radius = r;
+    position = pos;
 }
 
 Particle::~Particle() {

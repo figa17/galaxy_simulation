@@ -2,16 +2,17 @@
 #define PARTICLE_H
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <SFML/Graphics/Vertex.hpp>
 
 class Particle {
    private:
-    float r;
-    float m;
+    float radius;
+    float mass;
+    sf::Vector2f position;
 
    public:
-    Particle();
+    Particle(float r, float m, sf::Vector2f pos);
     ~Particle();
 };
 #endif
