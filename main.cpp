@@ -1,44 +1,37 @@
-#include <SFML/OpenGL.hpp>
-#include <SFML/Window.hpp>
-#include "include/Particle.hpp"
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define VELOCITY .00001
 
 int main() {
-
-    Particle pa ;
     // create the window
-    sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
-    window.setVerticalSyncEnabled(true);
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "My window");
 
-    // activate the window
-    window.setActive(true);
-
-    // load resources, initialize the OpenGL states, ...
-
-    // run the main loop
-    bool running = true;
-    while (running) {
-        // handle events
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+    shape.setPosition(100.f, 100.f);
+    // run the program as long as the window is open
+    while (window.isOpen()) {
+        // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                // end the program
-                running = false;
-            } else if (event.type == sf::Event::Resized) {
-                // adjust the viewport when the window is resized
-                glViewport(0, 0, event.size.width, event.size.height);
-            }
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
 
-        // clear the buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // draw...
-
-        // end the current frame (internally swaps the front and back buffers)
-        window.display();
+        // clear the window with black color
+        window.clear(sf::Color::Black);
+        window.draw(shape);
+        
+        //move shape        
+        for (size_t i = 0; i < 300; i++) {
+            shape.move(VELOCITY * i, VELOCITY * i);
+            window.draw(shape);
+            window.display();
+        }
     }
-
-    // release resources...
 
     return 0;
 }
