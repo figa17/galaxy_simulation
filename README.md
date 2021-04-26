@@ -1,3 +1,3 @@
-# galaxy_simulation
+# Galaxy Simulation
 
 Project developed to learn the SFML library
