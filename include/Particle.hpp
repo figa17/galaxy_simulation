@@ -3,11 +3,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <cmath>
+#include <iostream>
+
 #include "util.hpp"
 
-#define G 0.000000000066742;
+#define G_CONST 0.000000000066742;
 
 class Particle {
    protected:
@@ -28,6 +29,5 @@ class Particle {
     sf::Vector2f getPosition();
     sf::Vector2f getVelocity();
     sf::Vector2f getAcceleration();
-
 };
 #endif
