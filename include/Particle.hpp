@@ -1,14 +1,12 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
-#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
-
 #include "util.hpp"
 
-const float G_CONST = 0.000000000066742f;
+const float G_CONST = 0.00066742f;
 
 class Particle {
    protected:
@@ -34,4 +32,6 @@ class Particle {
     sf::Vector2f getVelocity();
     sf::Vector2f getAcceleration();
 };
+
+
 #endif

@@ -56,10 +56,7 @@ void Particle::setVelocity(float x, float y) {
 }
 
 void Particle::pulledBy(const Particle &other) {
-    float rest_x = pow((other.position.x - position.x), 2);
-    float rest_y = pow((other.position.y - position.y), 2);
-    float distance = sqrt(dotProdcut((position - other.position), (position - other.position)));
-
+    float distance = sqrt(dotP((position - other.position), (position - other.position)));
     acceleration += G_CONST * other.mass * (other.position - position) / distance / distance / distance;
 }
 void Particle::update(float dt) {

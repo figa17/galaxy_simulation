@@ -1,13 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
-#pragma once
 
-
-#include <cmath>
-#include <iostream>
-
-float dotProdcut(const sf::Vector2f v1, const sf::Vector2f v2) {
-    return (v1.x * v2.x) + (v1.y * v2.y);
-}
+#include <SFML/Graphics.hpp>
+float dotP(const sf::Vector2f v1, const sf::Vector2f v2);
 
 #endif
