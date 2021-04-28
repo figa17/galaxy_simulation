@@ -8,7 +8,7 @@
 
 #include "util.hpp"
 
-#define G_CONST 0.000000000066742;
+const float G_CONST = 0.000000000066742f;
 
 class Particle {
    protected:
@@ -21,9 +21,13 @@ class Particle {
    public:
     Particle();
     Particle(float m);
-    Particle(float r, float m, sf::Vector2f pos);
+    Particle(float r, float m);
     ~Particle();
+    float getRadius();
+    float getMass();
+    void setRadius(float r);
     void setPosition(float x, float y);
+    void setVelocity(float x, float y);
     void pulledBy(const Particle &particle);
     void update(float dt);
     sf::Vector2f getPosition();
