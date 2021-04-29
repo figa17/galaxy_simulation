@@ -7,7 +7,7 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
 #define VELOCITY .001
-const int n = 20000;
+const int n = 200;
 constexpr float dt = 1.0 / 400.0f;
 
 void initGalaxy(Particle centre, Particle extras[]) {
@@ -15,31 +15,33 @@ void initGalaxy(Particle centre, Particle extras[]) {
     centre = Particle(2000.0f, 2.5f);
     centre.setPosition(150.0f, 20.0f);
     centre.setVelocity(-5.0f, 0.0f);
-
-    //change distribution of particles (optional)
-    float maxRadius = 30.0f;  //max radius of the galaxy
-    float theta = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * M_PI * 2;
-    ;  //angle the particle makes with the centre
-    float r = 1.0f + ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * maxRadius);
-    r = r * r / maxRadius;
-    r += 0.2f * centre.getRadius();
-
     float offset = 0.6f;
 
+    //change distribution of particles (optional)
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<float> dist(-offset, offset);
+    std::uniform_real_distribution<float> distPoints(0, M_PI * 2);
+
+    float maxRadius = 30.0f;       //max radius of the galaxy
+    float theta = distPoints(mt);  //angle the particle makes with the centre
+
+    std::uniform_real_distribution<float> distRadius(1.0, maxRadius);
+    
+    float r = distRadius(mt);
+    r = r * r / maxRadius;
+    r += 0.2f * centre.getRadius();
 
     sf::Vector2f updatePos;
     for (int i = 0; i < n; i++) {
         extras[i].setPosition(r * cos(theta), r * sin(theta));  //polar to cartezian coordinates
         updatePos = extras[i].getPosition() + centre.getPosition();
         extras[i].setPosition(updatePos.x, -updatePos.y);  //move the particle relative to the centre
-        std::cout << updatePos.x << " --- " << updatePos.y << std::endl;
+        std::cout << updatePos.x << " *** " << updatePos.y << std::endl;
         float v = sqrt(G_CONST * centre.getMass() / r);  //calculate velocity based on radius
 
         sf::Vector2f velocityUpdate(0, 0);
-        velocityUpdate += sf::Vector2f(v * sin(theta), -v * cos(theta));  //polar to cartezian coordinates, rotated by 90 degrees
+        velocityUpdate += sf::Vector2f(v * sin(theta), v * cos(theta));  //polar to cartezian coordinates, rotated by 90 degrees
         velocityUpdate += sf::Vector2f(dist(mt), dist(mt));               //random offset to velocity
         velocityUpdate += centre.getVelocity();
 
@@ -57,7 +59,7 @@ int main() {
 
     Particle centre2(2000.0f, 2.5f);
     centre2.setPosition(100 + centre1.getPosition().x, 100 + centre1.getPosition().y);
-    centre2.setVelocity(-centre1.getVelocity().x, -centre1.getVelocity().y);
+    centre2.setVelocity(100 +centre1.getVelocity().x, 100 +centre1.getVelocity().y);
     Particle bodies2[n];
 
     initGalaxy(centre1, bodies1);
