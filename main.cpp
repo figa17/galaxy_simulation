@@ -4,45 +4,39 @@
 #include <random>
 
 #include "include/Particle.hpp"
-#define WINDOW_WIDTH 1200
-#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 #define VELOCITY .001
 const int n = 200;
-constexpr float dt = 1.0 / 400.0f;
+constexpr float dt = 1.0 / 5000.0f;
 
 void initGalaxy(Particle centre, Particle extras[]) {
-    /* Initializing first galaxy */
-    centre = Particle(2000.0f, 2.5f);
-    centre.setPosition(150.0f, 20.0f);
-    centre.setVelocity(-5.0f, 0.0f);
     float offset = 0.6f;
-
+    float maxRadius = 20.0f;
     //change distribution of particles (optional)
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<float> dist(-offset, offset);
+    std::uniform_real_distribution<float> dist(0, offset);
     std::uniform_real_distribution<float> distPoints(0, M_PI * 2);
-
-    float maxRadius = 30.0f;       //max radius of the galaxy
-    float theta = distPoints(mt);  //angle the particle makes with the centre
-
     std::uniform_real_distribution<float> distRadius(1.0, maxRadius);
-    
-    float r = distRadius(mt);
-    r = r * r / maxRadius;
-    r += 0.2f * centre.getRadius();
 
     sf::Vector2f updatePos;
     for (int i = 0; i < n; i++) {
-        extras[i].setPosition(r * cos(theta), r * sin(theta));  //polar to cartezian coordinates
-        updatePos = extras[i].getPosition() + centre.getPosition();
-        extras[i].setPosition(updatePos.x, -updatePos.y);  //move the particle relative to the centre
-        std::cout << updatePos.x << " *** " << updatePos.y << std::endl;
+        //max radius of the galaxy
+        float theta = distPoints(mt);  //angle the particle makes with the centre
+
+        float r = distRadius(mt);
+        r = r * r / maxRadius;
+        r += 0.2f * centre.getRadius();
+        float x = r * cos(theta);
+        float y = r * sin(theta);                                                       //polar to cartezian coordinates
+        extras[i].setPosition(centre.getPosition().x + x, centre.getPosition().y + y);  //move the particle relative to the centre
+
         float v = sqrt(G_CONST * centre.getMass() / r);  //calculate velocity based on radius
 
         sf::Vector2f velocityUpdate(0, 0);
         velocityUpdate += sf::Vector2f(v * sin(theta), v * cos(theta));  //polar to cartezian coordinates, rotated by 90 degrees
-        velocityUpdate += sf::Vector2f(dist(mt), dist(mt));               //random offset to velocity
+        velocityUpdate += sf::Vector2f(dist(mt), dist(mt));              //random offset to velocity
         velocityUpdate += centre.getVelocity();
 
         extras[i].setVelocity(velocityUpdate.x, velocityUpdate.y);
@@ -52,14 +46,14 @@ void initGalaxy(Particle centre, Particle extras[]) {
 
 int main() {
     /* Initializing first galaxy */
-    Particle centre1(2000.0f, 2.5f);
-    centre1.setPosition(10.0f, 10.0f);
-    centre1.setVelocity(-5.0f, 0.0f);
+    Particle centre1(3.0f, 2.5f);
+    centre1.setPosition(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2);
+    centre1.setVelocity(5.0f, 5.0f);
     Particle bodies1[n];
 
-    Particle centre2(2000.0f, 2.5f);
-    centre2.setPosition(100 + centre1.getPosition().x, 100 + centre1.getPosition().y);
-    centre2.setVelocity(100 +centre1.getVelocity().x, 100 +centre1.getVelocity().y);
+    Particle centre2(3.0f, 2.5f);
+    centre2.setPosition(WINDOW_WIDTH / 2 + 100, 50 + centre1.getPosition().y);
+    centre2.setVelocity(-centre1.getVelocity().x, -centre1.getVelocity().y);
     Particle bodies2[n];
 
     initGalaxy(centre1, bodies1);
@@ -70,12 +64,8 @@ int main() {
     sf::VertexArray pointsBodiesC1(sf::Points, n + 1);
     sf::VertexArray pointsBodiesC2(sf::Points, n + 1);
 
-    // points[0].setFillColor(sf::Color::Blue);
     pointsBodiesC1[0].position = centre1.getPosition();
     pointsBodiesC2[0].position = centre2.getPosition();
-    // sf::CircleShape shapeb2(20.f);
-    // shapeb2.setFillColor(sf::Color::Red);
-    // shapeb2.setPosition(centre2.getPosition().x, centre2.getPosition().y);
 
     window.clear(sf::Color::Black);
 

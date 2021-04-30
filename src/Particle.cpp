@@ -62,7 +62,7 @@ void Particle::pulledBy(const Particle &other) {
 void Particle::update(float dt) {
     velocity += dt * acceleration;
     position += dt * velocity;
-    acceleration = sf::Vector2f(.0f, .0f);
+    //acceleration = sf::Vector2f(.0f, .0f);
 }
 
 Particle::~Particle() {
