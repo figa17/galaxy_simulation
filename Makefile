@@ -1,5 +1,5 @@
 CC=g++
-LIBS=-lsfml-graphics -lsfml-window -lsfml-system -lGL -lGLU -std=c++17
+LIBS=-lsfml-graphics -lsfml-window -lsfml-system -lGL -lGLU -fopenmp -std=c++17
 OPS=-O3
 
 SRC_FILES=src/*.cpp include/*.hpp

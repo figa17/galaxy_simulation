@@ -1,32 +1,39 @@
+#include <omp.h>
+
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
 #include <random>
 
 #include "include/Particle.hpp"
+#include "include/util.hpp"
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800
 #define VELOCITY .001
+#define MAX_RADIUS_GALAXY 100.0
+
 const int n = 2000;
 constexpr float dt = 1.0 / 500.0f;
 
 void initGalaxy(Particle centre, Particle extras[]) {
     float offset = 0.6f;
-    float maxRadius = 100.0f;
+
     //change distribution of particles (optional)
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<float> dist(0, offset);
     std::uniform_real_distribution<float> distPoints(0, M_PI * 2);
-    std::uniform_real_distribution<float> distRadius(1.0, maxRadius);
+    std::uniform_real_distribution<float> distRadius(1.0, MAX_RADIUS_GALAXY);
 
     sf::Vector2f updatePos;
+
+    // #pragma omp parallel
     for (int i = 0; i < n; i++) {
         //max radius of the galaxy
         float theta = distPoints(mt);  //angle the particle makes with the centre
 
         float r = distRadius(mt);
-        r = r * r / maxRadius;
+        r = r * r / MAX_RADIUS_GALAXY;
         r += 0.2f * centre.getRadius();
         float x = r * cos(theta);
         float y = r * sin(theta);                                                       //polar to cartezian coordinates
@@ -45,6 +52,8 @@ void initGalaxy(Particle centre, Particle extras[]) {
 }
 
 int main() {
+    std::cout << "Num hilos: " << omp_get_max_threads() << std::endl;
+
     /* Initializing first galaxy */
     Particle centre1(3.0f, 20.5f);
     centre1.setPosition(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 200);
@@ -82,6 +91,7 @@ int main() {
 
         window.clear(sf::Color::Black);
         //particles are attracted to centres
+        #pragma omp parallel for
         for (int i = 0; i < n; i++) {
             bodies1[i].pulledBy(centre1);
             bodies2[i].pulledBy(centre1);
@@ -98,6 +108,7 @@ int main() {
         pointsBodiesC2[0].position = centre2.getPosition();
         pointsBodiesC2[0].color = sf::Color::Green;
 
+        #pragma omp parallel for
         for (int i = 0; i < n; i++) {
             bodies1[i].update(dt);
             bodies2[i].update(dt);

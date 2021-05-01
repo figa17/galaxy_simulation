@@ -6,7 +6,7 @@
 #include <iostream>
 #include "util.hpp"
 
-const float G_CONST = 5.0f;
+const float G_CONST = 3.0f;
 
 class Particle {
    protected:
