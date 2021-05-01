@@ -1,5 +1,7 @@
 #include "../include/util.hpp"
 
-float dotP(const sf::Vector2f v1, const sf::Vector2f v2) {
-    return (v1.x * v2.x) + (v1.y * v2.y);
+float magnitude(const sf::Vector2f v1, const sf::Vector2f v2) {
+    float distx = v2.x - v1.x;
+    float disty = v2.y - v1.y;
+    return sqrt(pow(distx, 2) + pow(disty, 2));
 }

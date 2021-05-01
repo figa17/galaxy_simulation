@@ -56,13 +56,23 @@ void Particle::setVelocity(float x, float y) {
 }
 
 void Particle::pulledBy(const Particle &other) {
-    float distance = sqrt(dotP((position - other.position), (position - other.position)));
-    acceleration += G_CONST * other.mass * (other.position - position) / distance / distance / distance;
+    float mag = magnitude(other.position, position);
+
+    // std::cout << mag << std::endl;
+    sf::Vector2f distance = other.position - position;
+    float m = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
+    distance = distance / m;
+
+    sf::Vector2f force = ((G_CONST * other.mass) / mag) * distance;
+    acceleration = acceleration + force;
+    // std::cout << acceleration.x << " -- " << acceleration.y << std::endl;
 }
 void Particle::update(float dt) {
-    velocity += dt * acceleration;
-    position += dt * velocity;
-    //acceleration = sf::Vector2f(.0f, .0f);
+    sf::Vector2f up = dt * acceleration;
+    velocity = velocity + up;
+    up = dt * velocity;
+    position = position + up;
+    acceleration = sf::Vector2f(.0f, .0f);
 }
 
 Particle::~Particle() {

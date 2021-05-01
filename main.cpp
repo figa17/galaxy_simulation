@@ -4,15 +4,15 @@
 #include <random>
 
 #include "include/Particle.hpp"
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 800
 #define VELOCITY .001
-const int n = 200;
-constexpr float dt = 1.0 / 5000.0f;
+const int n = 2000;
+constexpr float dt = 1.0 / 500.0f;
 
 void initGalaxy(Particle centre, Particle extras[]) {
     float offset = 0.6f;
-    float maxRadius = 20.0f;
+    float maxRadius = 100.0f;
     //change distribution of particles (optional)
     std::random_device rd;
     std::mt19937 mt(rd());
@@ -46,12 +46,12 @@ void initGalaxy(Particle centre, Particle extras[]) {
 
 int main() {
     /* Initializing first galaxy */
-    Particle centre1(3.0f, 2.5f);
-    centre1.setPosition(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2);
-    centre1.setVelocity(5.0f, 5.0f);
+    Particle centre1(3.0f, 20.5f);
+    centre1.setPosition(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 200);
+    centre1.setVelocity(2.0f, 5.0f);
     Particle bodies1[n];
 
-    Particle centre2(3.0f, 2.5f);
+    Particle centre2(3.0f, 10.5f);
     centre2.setPosition(WINDOW_WIDTH / 2 + 100, 50 + centre1.getPosition().y);
     centre2.setVelocity(-centre1.getVelocity().x, -centre1.getVelocity().y);
     Particle bodies2[n];
@@ -76,8 +76,10 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
         centre1.pulledBy(centre2);
         centre2.pulledBy(centre1);
+
         window.clear(sf::Color::Black);
         //particles are attracted to centres
         for (int i = 0; i < n; i++) {
