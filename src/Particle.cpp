@@ -31,6 +31,7 @@ void Particle::setRadius(float r) {
 float Particle::getRadius() {
     return radius;
 }
+
 float Particle::getMass() {
     return mass;
 }
@@ -42,6 +43,7 @@ sf::Vector2f Particle::getPosition() {
 sf::Vector2f Particle::getVelocity() {
     return velocity;
 }
+
 sf::Vector2f Particle::getAcceleration() {
     return acceleration;
 }
@@ -58,15 +60,14 @@ void Particle::setVelocity(float x, float y) {
 void Particle::pulledBy(const Particle &other) {
     float mag = magnitude(other.position, position);
 
-    // std::cout << mag << std::endl;
     sf::Vector2f distance = other.position - position;
     float m = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
     distance = distance / m;
 
     sf::Vector2f force = ((G_CONST * other.mass) / mag) * distance;
     acceleration = acceleration + force;
-    // std::cout << acceleration.x << " -- " << acceleration.y << std::endl;
 }
+
 void Particle::update(float dt) {
     sf::Vector2f up = dt * acceleration;
     velocity = velocity + up;
