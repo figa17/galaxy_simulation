@@ -9,7 +9,7 @@
 #include "include/util.hpp"
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800
-#define VELOCITY .001
+#define VELOCITY .01
 #define MAX_RADIUS_GALAXY 100.0
 
 const int n = 2000;
@@ -55,7 +55,7 @@ int main() {
     std::cout << "Num hilos: " << omp_get_max_threads() << std::endl;
 
     /* Initializing first galaxy */
-    Particle centre1(3.0f, 20.5f);
+    Particle centre1(3.0f, 30.5f);
     centre1.setPosition(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 200);
     centre1.setVelocity(2.0f, 5.0f);
     Particle bodies1[n];
@@ -91,7 +91,7 @@ int main() {
 
         window.clear(sf::Color::Black);
         //particles are attracted to centres
-        #pragma omp parallel for
+        //#pragma omp parallel for
         for (int i = 0; i < n; i++) {
             bodies1[i].pulledBy(centre1);
             bodies2[i].pulledBy(centre1);
@@ -108,7 +108,7 @@ int main() {
         pointsBodiesC2[0].position = centre2.getPosition();
         pointsBodiesC2[0].color = sf::Color::Green;
 
-        #pragma omp parallel for
+        //#pragma omp parallel for
         for (int i = 0; i < n; i++) {
             bodies1[i].update(dt);
             bodies2[i].update(dt);
